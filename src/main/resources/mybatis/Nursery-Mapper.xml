@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mybatis.Nursery-Mapper">
+
+	<sql id="whereNurType">
+<!-- 		<if test='nurTypeArr != 0'> -->
+		and trim(nur_type) in 
+		<foreach item="nurTypeArr" index="index" collection="nurTypeArr" open="(" close=")" separator=",">
+            #{nurTypeArr}
+    	</foreach>
+<!--     	</if> -->
+	</sql>
+	
+	<sql id="whereChildRate">
+		and true
+		<foreach item="childRateArr" index="index" collection="childRateArr" open=" " close=" "  separator=" ">
+            <choose>
+			<when test = "childRateArr eq 60">
+				or child_rate between 0 and 60
+			</when>
+			<when test = "childRateArr eq 80">
+				or child_rate between 61 and 80
+			</when>
+			<when test = "childRateArr eq 90">
+				or child_rate between 81and 90
+			</when>
+			<when test = "childRateArr eq 100">
+				or child_rate between 91 and 100
+			</when>
+			<otherwise></otherwise>
+			</choose>
+    	</foreach>
+
+	</sql>
+
+
+	<select id="selectChildRate" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		round(cast(pre_count as numeric) / cast(full_count as numeric), 2) * 100 as child_rate 
+		from nursery_geom
+	</select>
+
+	<select id="selectChildRate60" resultType="nursery">
+		<![CDATA[
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		round(cast(pre_count as numeric) / cast(full_count as numeric), 2) * 100 as child_rate 
+		from nursery_geom
+		where (round(cast(pre_count as numeric) / cast(full_count as numeric), 2) * 100) <= 60
+		]]>
+	</select>
+
+	<select id="selectChildRate80" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		round(cast(pre_count as numeric) / cast(full_count as numeric), 2) * 100 as child_rate 
+		from nursery_geom
+		where (round(cast(pre_count as numeric) / cast(full_count as numeric), 2) * 100) between 60 and 80
+	</select>
+
+	<select id="selectChildRate90" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		round(cast(pre_count as numeric) / cast(full_count as numeric), 2) * 100 as child_rate 
+		from nursery_geom
+		where (round(cast(pre_count as numeric) / cast(full_count as numeric), 2) * 100) between 80 and 90
+	</select>
+
+	<select id="selectChildRate100" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		round(cast(pre_count as numeric) / cast(full_count as numeric), 2) * 100 as child_rate 
+		from nursery_geom
+		where (round(cast(pre_count as numeric) / cast(full_count as numeric), 2) * 100) between 90 and 100
+	</select>
+	
+	<select id="selectNurType" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		trim(nur_type) as nur_type, nur_nm, detail_addr, phone_num, teacher_count, pre_count, full_count
+		from nursery_geom
+	</select>
+	
+	<select id="selectNurType1" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		trim(nur_type) as nur_type, nur_nm, detail_addr, phone_num, teacher_count, pre_count, full_count
+		from nursery_geom
+		where trim(nur_type) = '국공립'
+	</select>
+	
+	<select id="selectNurType2" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		trim(nur_type) as nur_type, nur_nm, detail_addr, phone_num, teacher_count, pre_count, full_count
+		from nursery_geom
+		where trim(nur_type) = '민간'
+	</select>
+	
+	<select id="selectNurType3" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		trim(nur_type) as nur_type, nur_nm, detail_addr, phone_num, teacher_count, pre_count, full_count
+		from nursery_geom
+		where trim(nur_type) = '가정'
+	</select>
+	
+	<select id="selectNurType4" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		trim(nur_type) as nur_type, nur_nm, detail_addr, phone_num, teacher_count, pre_count, full_count
+		from nursery_geom
+		where trim(nur_type) = '법인?단체등'
+	</select>
+	
+	<select id="selectNurType5" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		trim(nur_type) as nur_type, nur_nm, detail_addr, phone_num, teacher_count, pre_count, full_count
+		from nursery_geom
+		where trim(nur_type) = '협동'
+	</select>
+	
+	<select id="selectNurType6" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		trim(nur_type) as nur_type, nur_nm, detail_addr, phone_num, teacher_count, pre_count, full_count
+		from nursery_geom
+		where trim(nur_type) = '사회복지법인'
+	</select>
+	
+	<select id="selectNurType7" resultType="nursery">
+		select 
+		st_asText(st_transform(geom,5181)) as point,
+		cast(long as numeric) as x, 
+		cast(lat as numeric) as y, 
+		trim(nur_type) as nur_type, nur_nm, detail_addr, phone_num, teacher_count, pre_count, full_count
+		from nursery_geom
+		where trim(nur_type) = '직장'
+	</select>
+	
+	<select id="selectChildCell" resultType="child">
+		select gid, val, st_asText(st_transform(st_setsrid(geom,5179),5181)) as geom from child_cell
+	</select>
+	
+	<select id="selectFinalCell" resultType="final" parameterType="java.util.HashMap">
+		with nursery as (
+		    select nur_code,
+		           pre_count,
+		           teacher_count,
+		           nur_nm,
+		        full_count,
+		           geom
+		           from nursery_geom 
+		    where pre_count != 0
+		      and teacher_count != 0
+		    and full_count != 0
+		    <if test='nurTypeKey != "all"'>
+		    <include refid="whereNurType"></include>
+		    </if>
+		) , child_cell as (
+		    select gid,val,geom,
+		           st_transform(st_setsrid(st_centroid(geom),5179), 5174) as dis_geom,
+		           st_transform(st_setsrid(geom,5179),5181) as geom_2,
+		           st_transform(st_setsrid(st_centroid(geom),5179),5181) as geom_3
+		    from child_cell
+		), emd as (
+		    select national_rate,
+		           st_transform(st_setsrid(geom,5174),5181) as geom from admin_emd
+		)
+		, tb_0 as (
+		      select b.gid as gid, a.nur_code, a.nur_nm, (a.pre_count / a.teacher_count) as per_cnt,
+		             round(cast(a.pre_count as numeric) / cast(a.full_count as numeric), 2) * 100 as child_rate,
+		             round(st_distance(a.geom, b.dis_geom)) as distance,
+		             a.geom
+		      from nursery a, child_cell b
+		      where true
+		)
+		, tb_0_1 as (
+		select *,
+		    rank() over(partition by gid order by distance) dis_rank
+		from tb_0
+		)
+		   , tb_1 as (
+		    <if test='childRateKey != "all"'>
+		    <foreach item="childRateArr" index="index" collection="childRateArr" open=" " close=" "  separator="union">
+            <choose>
+			<when test = "childRateArr eq 60">
+			 select gid,
+		           case when avg(per_cnt) between 1 and 2 then 20
+		                when avg(per_cnt) between 3 and 4 then 40
+		                when avg(per_cnt) between 5 and 6 then 60
+		                when avg(per_cnt) between 7 and 8 then 80
+		                else 100
+		               end as per_cnt_score,
+		           round(avg(child_rate)) as child_rate,
+		           case when avg(distance) between 0 and 200 then 20
+		                when avg(distance) between 201 and 400 then 40
+		                when avg(distance) between 401 and 600 then 60
+		                when avg(distance) between 601 and 800 then 80
+		                else 100
+		               end as distance_rate
+		    from tb_0_1
+			<![CDATA[where dis_rank <= 3 ]]>
+				and child_rate between 0 and 60
+				group by gid
+			</when>
+			<when test = "childRateArr eq 80">
+			select gid,
+		           case when avg(per_cnt) between 1 and 2 then 20
+		                when avg(per_cnt) between 3 and 4 then 40
+		                when avg(per_cnt) between 5 and 6 then 60
+		                when avg(per_cnt) between 7 and 8 then 80
+		                else 100
+		               end as per_cnt_score,
+		           round(avg(child_rate)) as child_rate,
+		           case when avg(distance) between 0 and 200 then 20
+		                when avg(distance) between 201 and 400 then 40
+		                when avg(distance) between 401 and 600 then 60
+		                when avg(distance) between 601 and 800 then 80
+		                else 100
+		               end as distance_rate
+		    from tb_0_1
+			<![CDATA[where dis_rank <= 3 ]]>
+				and child_rate between 61 and 80
+				group by gid
+			</when>
+			<when test = "childRateArr eq 90">
+				select gid,
+		           case when avg(per_cnt) between 1 and 2 then 20
+		                when avg(per_cnt) between 3 and 4 then 40
+		                when avg(per_cnt) between 5 and 6 then 60
+		                when avg(per_cnt) between 7 and 8 then 80
+		                else 100
+		               end as per_cnt_score,
+		           round(avg(child_rate)) as child_rate,
+		           case when avg(distance) between 0 and 200 then 20
+		                when avg(distance) between 201 and 400 then 40
+		                when avg(distance) between 401 and 600 then 60
+		                when avg(distance) between 601 and 800 then 80
+		                else 100
+		               end as distance_rate
+		    from tb_0_1
+			<![CDATA[where dis_rank <= 3 ]]>
+				and child_rate between 81 and 91
+				group by gid
+			</when>
+			<when test = "childRateArr eq 100">
+				select gid,
+		           case when avg(per_cnt) between 1 and 2 then 20
+		                when avg(per_cnt) between 3 and 4 then 40
+		                when avg(per_cnt) between 5 and 6 then 60
+		                when avg(per_cnt) between 7 and 8 then 80
+		                else 100
+		               end as per_cnt_score,
+		           round(avg(child_rate)) as child_rate,
+		           case when avg(distance) between 0 and 200 then 20
+		                when avg(distance) between 201 and 400 then 40
+		                when avg(distance) between 401 and 600 then 60
+		                when avg(distance) between 601 and 800 then 80
+		                else 100
+		               end as distance_rate
+		    from tb_0_1
+			<![CDATA[where dis_rank <= 3 ]]>
+				and child_rate between 91 and 100
+				group by gid
+			</when>
+			<otherwise></otherwise>
+			</choose>
+    	</foreach>
+    	</if>
+    	<if test='childRateKey == "all"'>
+    	select gid,
+		           case when avg(per_cnt) between 1 and 2 then 20
+		                when avg(per_cnt) between 3 and 4 then 40
+		                when avg(per_cnt) between 5 and 6 then 60
+		                when avg(per_cnt) between 7 and 8 then 80
+		                else 100
+		               end as per_cnt_score,
+		           round(avg(child_rate)) as child_rate,
+		           case when avg(distance) between 0 and 200 then 20
+		                when avg(distance) between 201 and 400 then 40
+		                when avg(distance) between 401 and 600 then 60
+		                when avg(distance) between 601 and 800 then 80
+		                else 100
+		               end as distance_rate
+		    from tb_0_1
+			<![CDATA[where dis_rank <= 3 ]]>
+			group by gid
+    	</if>
+		)
+		   , tb_2 as (
+		    select a.gid as gid, a.val as child_cnt, b.val as djg_cnt,
+		           round((a.val / b.val),2) * 100  as djg_child_rate
+		    from child_cell a, djg_cell b
+		    where a.gid = b.gid
+		    and b.val !=0
+		    and a.val !=0
+		)
+		select a.gid, a.per_cnt_score, a.child_rate, a.distance_rate, b.djg_child_rate, d.national_rate,
+		       st_asText(c.geom_2) as geom
+		from tb_1 a, tb_2 b, child_cell c, emd d
+		where a.gid = b.gid
+		  and a.gid = c.gid
+		  and st_intersects(c.geom_3,d.geom)
+		
+	</select>
+
+</mapper>
+
+
+	
